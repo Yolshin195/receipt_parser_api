@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Примонтируйте текущую директорию (локальный код) в контейнер
+      - ./app:/app/app
+    environment:
+      # Настройте переменные окружения, если следует
+      - ENV=development
+    ports:
+      - "8000:8000"
+    command:
+      # Запустите ваш фреймворк в режиме автоперезапуска
+      - litestar
+      - run
+      - --host=0.0.0.0
+      - --port=8000
+      - --reload
+      - --reload-dir=/app/app

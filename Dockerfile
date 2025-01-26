@@ -16,6 +16,6 @@ RUN uv sync --frozen --no-cache
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["litestar", "run", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["litestar", "run", "--host", "0.0.0.0", "--port", "8000"]
 
 EXPOSE 8000

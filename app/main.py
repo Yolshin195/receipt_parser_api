@@ -8,13 +8,19 @@ from litestar.params import Body
 from litestar.openapi.config import OpenAPIConfig
 from litestar.openapi.plugins import SwaggerRenderPlugin
 
-from receipt_parser_service import receipt_parser_async
+from app.receipt_parser_service import get_text_from_image_async, receipt_parser_async
 
 
 @get("/")
 async def readme() -> dict[str, str]:
     """Handler function that returns a description of the service."""
     return {"description": "Этот сервис предназначен для распознавания текста с изображений чеков."}
+
+
+@post("/text")
+async def get_text_from_image(data: Annotated[UploadFile, Body(media_type=RequestEncodingType.MULTI_PART)]) -> str:
+    file_bytes = await data.read()
+    return await get_text_from_image_async(io.BytesIO(file_bytes))
 
 
 @post("/")
@@ -25,7 +31,7 @@ async def receipt_parser(data: Annotated[UploadFile, Body(media_type=RequestEnco
 
 
 app = Litestar(
-    route_handlers=[readme, receipt_parser],
+    route_handlers=[readme, get_text_from_image, receipt_parser],
     openapi_config=OpenAPIConfig(
         title="Litestar Example",
         description="Example of litestar",

@@ -3,11 +3,10 @@ import io
 import pytesseract
 from PIL import Image
 
-
 from transformers import pipeline
 
 qa_pipeline = pipeline("question-answering", model="distilbert-base-cased")
-question: str = "Return the total number from the receipt"
+question: str = "What is the total amount on the receipt, which is the largest number listed on it?"
 
 
 def get_text_from_image(image_bytes: io.BytesIO) -> str:
@@ -17,10 +16,10 @@ def get_text_from_image(image_bytes: io.BytesIO) -> str:
 
 
 def get_data(receipt_text: str) -> str:
-    result = qa_pipeline({
-        'context': receipt_text,
-        'question': question
-    })
+    result = qa_pipeline(
+        question=question,
+        context=receipt_text
+    )
     return result['answer']
 
 
